@@ -123,11 +123,13 @@ struct carnet {
 	char Perfil_riesgo[30];
 	char telefono[12];
 	char RFC[30];
+	carnet* anterior;
+	carnet* siguente;
 
-
-}lista_carnet[100];
+};
 carnet lista_heapquick[100];
-carnet lista_search[100];
+carnet* lista_search;
+carnet lista_encontrar;
 
 //punteros de inicio 
 usuario* inicio_uc = nullptr;
@@ -596,17 +598,29 @@ void Guardar_reportes() {
 }
 
 //BUSQUEDAS
-void busqueda_secuencial(char* nombre) {      //Buscar por nombre
-	int aux_busqueda_n = 0;
-	while (aux_busqueda_n <= indice_carnet - 1) {
-		if (strcmp(nombre, lista_carnet[aux_busqueda_n].nombre_persona) == 0) {
-			lista_search[mostrar] = lista_carnet[aux_busqueda_n];
+//void busqueda_secuencial(char* nombre) {      //Buscar por nombre
+//	int aux_busqueda_n = 0;
+//	while (aux_busqueda_n <= indice_carnet - 1) {
+//		if (strcmp(nombre, lista_carnet->nombre_persona) == 0) {
+//			lista_search = lista_carnet;
+//			mostrar++;
+//		}
+//		aux_busqueda_n++;
+//
+//	}
+//}
+
+void busqueda_secuencual_by_listas(char* nombre) {
+	carnet* aux = primero;
+	
+	while(aux->siguente != primero) {
+		if (strcmp(nombre, aux->nombre_persona) == 0) {
+			lista_search = aux;
 			mostrar++;
 		}
-		aux_busqueda_n++;
-
 	}
 }
+
 void busqueda_binaria(int numero) {         //Buscar por carnet
 	int aux_id_car = 0;
 	if (lista_search[0].No_carnet != NULL) {
