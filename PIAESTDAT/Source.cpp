@@ -130,6 +130,7 @@ struct carnet {
 carnet lista_heapquick[100];
 carnet* lista_search;
 carnet lista_encontrar;
+carnet* lista_mostrar;
 
 //punteros de inicio 
 usuario* inicio_uc = nullptr;
@@ -405,7 +406,7 @@ void Guardar_usuarios() {
 		if (gcarnet.is_open()) {
 			int aux_save = 0;
 			for (aux_save; aux_save < indice_carnet; aux_save++) {
-				gcarnet.write(reinterpret_cast<char*>(&lista_carnet[aux_save]), sizeof(lista_carnet[aux_save]));
+				gcarnet.write(reinterpret_cast<char*>(&lista_mostrar[aux_save]), sizeof(lista_mostrar[aux_save]));
 			}
 
 			gcarnet.close();
@@ -526,7 +527,7 @@ void Cargar_carnet() {
 	if (archivo.is_open()) {
 
 		while (!archivo.eof()) {
-			archivo.read((char*)&lista_carnet[aux_load], sizeof(lista_carnet[aux_load]));
+			archivo.read((char*)&lista_mostrar[aux_load], sizeof(lista_mostrar[aux_load]));
 			aux_load++;
 			indice_carnet++;
 		}
@@ -601,8 +602,8 @@ void Guardar_reportes() {
 //void busqueda_secuencial(char* nombre) {      //Buscar por nombre
 //	int aux_busqueda_n = 0;
 //	while (aux_busqueda_n <= indice_carnet - 1) {
-//		if (strcmp(nombre, lista_carnet->nombre_persona) == 0) {
-//			lista_search = lista_carnet;
+//		if (strcmp(nombre, lista_mostrar->nombre_persona) == 0) {
+//			lista_search = lista_mostrar;
 //			mostrar++;
 //		}
 //		aux_busqueda_n++;
@@ -610,7 +611,7 @@ void Guardar_reportes() {
 //	}
 //}
 
-void busqueda_secuencual_by_listas(char* nombre) {
+void busqueda_secuencial_by_listas(char* nombre) {
 	carnet* aux = primero;
 	
 	while(aux->siguente != primero) {
@@ -708,7 +709,7 @@ int partition(int bajo, int alto)
 
 	for (int y = bajo; y <= alto - 1; y++) {
 		if (strcmp(lista_heapquick[y].nombre_persona, lista_heapquick[pivote].nombre_persona) < 0) {//personas
-			/*if (lista_carnet[y].No_carnet < pivote) {*/
+			/*if (lista_mostrar[y].No_carnet < pivote) {*/
 			x++;
 			swap(lista_heapquick[x], lista_heapquick[y]);
 		}
@@ -1565,7 +1566,7 @@ BOOL CALLBACK Registro_Carnet(HWND handler, UINT mensaje, WPARAM wParam, LPARAM 
 			char aux_lugar[255], aux_vacuna[50], aux_tipo[50], aux_nombre[50];
 			SendDlgItemMessage(handler, AC_CURP, WM_GETTEXT, sizeof(CURP) / sizeof(CURP[0]), (LPARAM)CURP);
 			SendMessage(GetDlgItem(handler, AC_Lugar), WM_GETTEXT, sizeof(aux_lugar) / sizeof(aux_lugar[0]), (LPARAM)aux_lugar);
-			//lista_carnet[indice_carnet].No_dosis = atoi(n_dosi);
+			//lista_mostrar[indice_carnet].No_dosis = atoi(n_dosi);
 			SendMessage(GetDlgItem(handler, AC_Vacuna), WM_GETTEXT, sizeof(aux_vacuna) / sizeof(aux_vacuna[0]), (LPARAM)aux_vacuna);
 			SendMessage(GetDlgItem(handler, AC_TipoVacuna), WM_GETTEXT, sizeof(aux_tipo) / sizeof(aux_tipo[0]), (LPARAM)aux_tipo);
 			SendMessage(GetDlgItem(handler, AC_Dosis), WM_GETTEXT, sizeof(n_dosi) / sizeof(n_dosi[0]), (LPARAM)n_dosi);
@@ -1603,39 +1604,39 @@ BOOL CALLBACK Registro_Carnet(HWND handler, UINT mensaje, WPARAM wParam, LPARAM 
 						}
 						else {
 
-							lista_carnet[indice_carnet].No_carnet = indice_carnet + 1;
-							strcpy_s(lista_carnet[indice_carnet].CURP, CURP);
-							SendDlgItemMessage(handler, AC_CURP, WM_GETTEXT, sizeof(lista_carnet[indice_carnet].CURP) / sizeof(lista_carnet[indice_carnet].CURP[0]), (LPARAM)lista_carnet[indice_carnet].CURP);
+							lista_mostrar[indice_carnet].No_carnet = indice_carnet + 1;
+							strcpy_s(lista_mostrar[indice_carnet].CURP, CURP);
+							SendDlgItemMessage(handler, AC_CURP, WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].CURP) / sizeof(lista_mostrar[indice_carnet].CURP[0]), (LPARAM)lista_mostrar[indice_carnet].CURP);
 							/*	*/
-							SendDlgItemMessage(handler, AC_Nombre, WM_GETTEXT, sizeof(lista_carnet[indice_carnet].nombre_persona) / sizeof(lista_carnet[indice_carnet].nombre_persona[0]), (LPARAM)lista_carnet[indice_carnet].nombre_persona);
-							SendMessage(GetDlgItem(handler, AC_ApellidoP), WM_GETTEXT, sizeof(lista_carnet[indice_carnet].npaterno) / sizeof(lista_carnet[indice_carnet].npaterno[0]), (LPARAM)lista_carnet[indice_carnet].npaterno);
-							SendMessage(GetDlgItem(handler, AC_ApellidoM), WM_GETTEXT, sizeof(lista_carnet[indice_carnet].nmaterno) / sizeof(lista_carnet[indice_carnet].nmaterno[0]), (LPARAM)lista_carnet[indice_carnet].nmaterno);
+							SendDlgItemMessage(handler, AC_Nombre, WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].nombre_persona) / sizeof(lista_mostrar[indice_carnet].nombre_persona[0]), (LPARAM)lista_mostrar[indice_carnet].nombre_persona);
+							SendMessage(GetDlgItem(handler, AC_ApellidoP), WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].npaterno) / sizeof(lista_mostrar[indice_carnet].npaterno[0]), (LPARAM)lista_mostrar[indice_carnet].npaterno);
+							SendMessage(GetDlgItem(handler, AC_ApellidoM), WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].nmaterno) / sizeof(lista_mostrar[indice_carnet].nmaterno[0]), (LPARAM)lista_mostrar[indice_carnet].nmaterno);
 							SendMessage(GetDlgItem(handler, AC_Edad), WM_GETTEXT, sizeof(Edad) / sizeof(Edad[0]), (LPARAM)Edad);
-							lista_carnet[indice_carnet].edad = atoi(Edad);
-							SendMessage(GetDlgItem(handler, AC_Sexo), WM_GETTEXT, sizeof(lista_carnet[indice_carnet].sexo) / sizeof(lista_carnet[indice_carnet].sexo[0]), (LPARAM)lista_carnet[indice_carnet].sexo);
+							lista_mostrar[indice_carnet].edad = atoi(Edad);
+							SendMessage(GetDlgItem(handler, AC_Sexo), WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].sexo) / sizeof(lista_mostrar[indice_carnet].sexo[0]), (LPARAM)lista_mostrar[indice_carnet].sexo);
 
-							SendMessage(GetDlgItem(handler, AC_Lugar), WM_GETTEXT, sizeof(lista_carnet[indice_carnet].lugar) / sizeof(lista_carnet[indice_carnet].lugar[0]), (LPARAM)lista_carnet[indice_carnet].lugar);
-							lista_carnet[indice_carnet].No_dosis = atoi(n_dosi);
-							SendMessage(GetDlgItem(handler, AC_Vacuna), WM_GETTEXT, sizeof(lista_carnet[indice_carnet].vacuna) / sizeof(lista_carnet[indice_carnet].vacuna[0]), (LPARAM)lista_carnet[indice_carnet].vacuna);
-							SendMessage(GetDlgItem(handler, AC_TipoVacuna), WM_GETTEXT, sizeof(lista_carnet[indice_carnet].z_vac) / sizeof(lista_carnet[indice_carnet].z_vac[0]), (LPARAM)lista_carnet[indice_carnet].z_vac);
+							SendMessage(GetDlgItem(handler, AC_Lugar), WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].lugar) / sizeof(lista_mostrar[indice_carnet].lugar[0]), (LPARAM)lista_mostrar[indice_carnet].lugar);
+							lista_mostrar[indice_carnet].No_dosis = atoi(n_dosi);
+							SendMessage(GetDlgItem(handler, AC_Vacuna), WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].vacuna) / sizeof(lista_mostrar[indice_carnet].vacuna[0]), (LPARAM)lista_mostrar[indice_carnet].vacuna);
+							SendMessage(GetDlgItem(handler, AC_TipoVacuna), WM_GETTEXT, sizeof(lista_mostrar[indice_carnet].z_vac) / sizeof(lista_mostrar[indice_carnet].z_vac[0]), (LPARAM)lista_mostrar[indice_carnet].z_vac);
 
-							GetLocalTime(&lista_carnet[indice_carnet].fecha_aplicacion);
-							SendDlgItemMessage(handler, AC_FechaDosisSiguiente, DTM_GETSYSTEMTIME, NULL, (LPARAM) & (lista_carnet[indice_carnet].prox_dosis));
-							lista_carnet[indice_carnet].fecha_nac = lista->nacimiento;
-							strcat_s(lista_carnet[indice_carnet].calle, lista->calle);
-							strcat_s(lista_carnet[indice_carnet].colonia, lista->colonia);
-							strcat_s(lista_carnet[indice_carnet].estado, lista->estado);
-							strcat_s(lista_carnet[indice_carnet].ciudad, lista->ciudad);
-							strcat_s(lista_carnet[indice_carnet].Gpo_ocupacional, lista->Gpo_ocupacional);
-							strcat_s(lista_carnet[indice_carnet].Perfil_riesgo, lista->Perfil_riesgo);
-							strcat_s(lista_carnet[indice_carnet].e_civil, lista->e_civil);
-							strcat_s(lista_carnet[indice_carnet].telefono, lista->telefono);
-							strcat_s(lista_carnet[indice_carnet].RFC, lista->RFC);
-							lista_carnet[indice_carnet].numero = lista->numero;
+							GetLocalTime(&lista_mostrar[indice_carnet].fecha_aplicacion);
+							SendDlgItemMessage(handler, AC_FechaDosisSiguiente, DTM_GETSYSTEMTIME, NULL, (LPARAM) & (lista_mostrar[indice_carnet].prox_dosis));
+							lista_mostrar[indice_carnet].fecha_nac = lista->nacimiento;
+							strcat_s(lista_mostrar[indice_carnet].calle, lista->calle);
+							strcat_s(lista_mostrar[indice_carnet].colonia, lista->colonia);
+							strcat_s(lista_mostrar[indice_carnet].estado, lista->estado);
+							strcat_s(lista_mostrar[indice_carnet].ciudad, lista->ciudad);
+							strcat_s(lista_mostrar[indice_carnet].Gpo_ocupacional, lista->Gpo_ocupacional);
+							strcat_s(lista_mostrar[indice_carnet].Perfil_riesgo, lista->Perfil_riesgo);
+							strcat_s(lista_mostrar[indice_carnet].e_civil, lista->e_civil);
+							strcat_s(lista_mostrar[indice_carnet].telefono, lista->telefono);
+							strcat_s(lista_mostrar[indice_carnet].RFC, lista->RFC);
+							lista_mostrar[indice_carnet].numero = lista->numero;
 
 
 
-							strcpy_s(lista_carnet[indice_carnet].foto, aux_foto);
+							strcpy_s(lista_mostrar[indice_carnet].foto, aux_foto);
 							indice_carnet++;
 							dato_guardar = guardar_carnet;
 							Guardar_usuarios();
@@ -1795,29 +1796,29 @@ BOOL CALLBACK Eliminar_Carnet(HWND handler, UINT mensaje, WPARAM wParam, LPARAM 
 					encontrar = false;
 					MessageBox(handler, "Carnet encontrado", "Aviso", MB_OK);
 					valor_busqueda--;
-					SendMessage(GetDlgItem(handler, BC_Nombre), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].nombre_persona) / sizeof(lista_carnet[valor_busqueda].nombre_persona[0]), (LPARAM)lista_carnet[valor_busqueda].nombre_persona);
-					SendMessage(GetDlgItem(handler, BC_ApellidoP), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].npaterno) / sizeof(lista_carnet[valor_busqueda].npaterno[0]), (LPARAM)lista_carnet[valor_busqueda].npaterno);
-					SendMessage(GetDlgItem(handler, BC_ApellidoM), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].nmaterno) / sizeof(lista_carnet[valor_busqueda].nmaterno[0]), (LPARAM)lista_carnet[valor_busqueda].nmaterno);
-					SendMessage(GetDlgItem(handler, BC_Sexo), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].sexo) / sizeof(lista_carnet[valor_busqueda].sexo[0]), (LPARAM)lista_carnet[valor_busqueda].sexo);
-					_itoa_s(lista_carnet[valor_busqueda].edad, aux_ed_edad, sizeof(aux_ed_edad));
+					SendMessage(GetDlgItem(handler, BC_Nombre), WM_SETTEXT, sizeof(lista_mostrar->nombre_persona) / sizeof(lista_mostrar->nombre_persona[0]), (LPARAM)lista_mostrar->nombre_persona);
+					SendMessage(GetDlgItem(handler, BC_ApellidoP), WM_SETTEXT, sizeof(lista_mostrar->npaterno) / sizeof(lista_mostrar->npaterno[0]), (LPARAM)lista_mostrar->npaterno);
+					SendMessage(GetDlgItem(handler, BC_ApellidoM), WM_SETTEXT, sizeof(lista_mostrar->nmaterno) / sizeof(lista_mostrar->nmaterno[0]), (LPARAM)lista_mostrar->nmaterno);
+					SendMessage(GetDlgItem(handler, BC_Sexo), WM_SETTEXT, sizeof(lista_mostrar->sexo) / sizeof(lista_mostrar->sexo[0]), (LPARAM)lista_mostrar->sexo);
+					_itoa_s(lista_mostrar->edad, aux_ed_edad, sizeof(aux_ed_edad));
 					SendMessage(GetDlgItem(handler, BC_Edad), WM_SETTEXT, sizeof(aux_ed_edad) / sizeof(aux_ed_edad[0]), (LPARAM)aux_ed_edad);
-					GetDateFormat(NULL, 0, &(lista_carnet[valor_busqueda].prox_dosis), NULL, formato_fecha, sizeof(formato_fecha));
+					GetDateFormat(NULL, 0, &(lista_mostrar->prox_dosis), NULL, formato_fecha, sizeof(formato_fecha));
 					SendMessage(GetDlgItem(handler, BC_FechaNacimiento), WM_SETTEXT, sizeof(formato_fecha) / sizeof(formato_fecha), (LPARAM)formato_fecha);
 
-					SendMessage(GetDlgItem(handler, BC_Vacuna), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].vacuna) / sizeof(lista_carnet[valor_busqueda].vacuna[0]), (LPARAM)lista_carnet[valor_busqueda].vacuna);
-					// SendMessage(GetDlgItem(handler, EDC_AUXV), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].vacuna) / sizeof(lista_carnet[valor_busqueda].vacuna[0]), (LPARAM)lista_carnet[valor_busqueda].vacuna);
+					SendMessage(GetDlgItem(handler, BC_Vacuna), WM_SETTEXT, sizeof(lista_mostrar->vacuna) / sizeof(lista_mostrar->vacuna[0]), (LPARAM)lista_mostrar->vacuna);
+					// SendMessage(GetDlgItem(handler, EDC_AUXV), WM_SETTEXT, sizeof(lista_mostrar->vacuna) / sizeof(lista_mostrar->vacuna[0]), (LPARAM)lista_mostrar->vacuna);
 					char aux_dosis[10];
-					_itoa_s(lista_carnet[valor_busqueda].No_dosis, aux_dosis, sizeof(aux_dosis));
+					_itoa_s(lista_mostrar->No_dosis, aux_dosis, sizeof(aux_dosis));
 					SendMessage(GetDlgItem(handler, BC_Dosis), WM_SETTEXT, sizeof(aux_dosis) / sizeof(aux_dosis), (LPARAM)aux_dosis);
 					char aux_f_a[20];
 					char aux_f_a2[20];
-					GetDateFormat(NULL, 0, &(lista_carnet[valor_busqueda].fecha_aplicacion), NULL, aux_f_a, sizeof(aux_f_a));
-					GetDateFormat(NULL, 0, &(lista_carnet[valor_busqueda].prox_dosis), NULL, aux_f_a2, sizeof(aux_f_a2));
+					GetDateFormat(NULL, 0, &(lista_mostrar->fecha_aplicacion), NULL, aux_f_a, sizeof(aux_f_a));
+					GetDateFormat(NULL, 0, &(lista_mostrar->prox_dosis), NULL, aux_f_a2, sizeof(aux_f_a2));
 
 					SendMessage(GetDlgItem(handler, BC_ProxDosis), WM_SETTEXT, sizeof(aux_f_a) / sizeof(aux_f_a[0]), (LPARAM)aux_f_a);
 					// SendMessage(GetDlgItem(handler, EDC_PDOSIS2), WM_SETTEXT, sizeof(aux_f_a2) / sizeof(aux_f_a2[0]), (LPARAM)aux_f_a2);
-					SendMessage(GetDlgItem(handler, BC_Lugar), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].lugar) / sizeof(lista_carnet[valor_busqueda].lugar[0]), (LPARAM)lista_carnet[valor_busqueda].lugar);
-					HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_carnet[valor_busqueda].foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+					SendMessage(GetDlgItem(handler, BC_Lugar), WM_SETTEXT, sizeof(lista_mostrar->lugar) / sizeof(lista_mostrar->lugar[0]), (LPARAM)lista_mostrar->lugar);
+					HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_mostrar->foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
 					SendMessage(GetDlgItem(handler, BC_Foto), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)foto);
 				}
 			}
@@ -1845,9 +1846,9 @@ BOOL CALLBACK Eliminar_Carnet(HWND handler, UINT mensaje, WPARAM wParam, LPARAM 
 				else {
 
 					for (int x = indice_carnet; x >= 0; x--) {
-						lista_carnet[x + 1] = lista_carnet[x];
+						lista_mostrar[x + 1] = lista_mostrar[x];
 					}
-					lista_carnet[ID_busqueda - 1] = lista_carnet[ID_busqueda];
+					lista_mostrar[ID_busqueda - 1] = lista_mostrar[ID_busqueda];
 					indice_carnet--;
 					dato_guardar = guardar_carnet;
 					Guardar_usuarios();
@@ -2182,28 +2183,28 @@ BOOL CALLBACK Editar_Carnet(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lP
 					encontrar = false;
 					MessageBox(handler, "Carnet encontrado", "Aviso", MB_OK);
 					valor_busqueda = valor_busqueda - 1;
-					SendMessage(GetDlgItem(handler, CC_Nombre), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].nombre_persona) / sizeof(lista_carnet[valor_busqueda].nombre_persona[0]), (LPARAM)lista_carnet[valor_busqueda].nombre_persona);
-					SendMessage(GetDlgItem(handler, CC_ApellidoP), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].npaterno) / sizeof(lista_carnet[valor_busqueda].npaterno[0]), (LPARAM)lista_carnet[valor_busqueda].npaterno);
-					SendMessage(GetDlgItem(handler, CC_ApellidoM), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].nmaterno) / sizeof(lista_carnet[valor_busqueda].nmaterno[0]), (LPARAM)lista_carnet[valor_busqueda].nmaterno);
-					SendMessage(GetDlgItem(handler, CC_Sexo), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].sexo) / sizeof(lista_carnet[valor_busqueda].sexo[0]), (LPARAM)lista_carnet[valor_busqueda].sexo);
-					_itoa_s(lista_carnet[valor_busqueda].edad, aux_ed_edad, sizeof(aux_ed_edad));
+					SendMessage(GetDlgItem(handler, CC_Nombre), WM_SETTEXT, sizeof(lista_mostrar->nombre_persona) / sizeof(lista_mostrar->nombre_persona[0]), (LPARAM)lista_mostrar->nombre_persona);
+					SendMessage(GetDlgItem(handler, CC_ApellidoP), WM_SETTEXT, sizeof(lista_mostrar->npaterno) / sizeof(lista_mostrar->npaterno[0]), (LPARAM)lista_mostrar->npaterno);
+					SendMessage(GetDlgItem(handler, CC_ApellidoM), WM_SETTEXT, sizeof(lista_mostrar->nmaterno) / sizeof(lista_mostrar->nmaterno[0]), (LPARAM)lista_mostrar->nmaterno);
+					SendMessage(GetDlgItem(handler, CC_Sexo), WM_SETTEXT, sizeof(lista_mostrar->sexo) / sizeof(lista_mostrar->sexo[0]), (LPARAM)lista_mostrar->sexo);
+					_itoa_s(lista_mostrar->edad, aux_ed_edad, sizeof(aux_ed_edad));
 					SendMessage(GetDlgItem(handler, CC_Edad), WM_SETTEXT, sizeof(aux_ed_edad) / sizeof(aux_ed_edad[0]), (LPARAM)aux_ed_edad);
-					GetDateFormat(NULL, 0, &(lista_carnet[valor_busqueda].fecha_aplicacion), NULL, formato_fecha, sizeof(formato_fecha));
+					GetDateFormat(NULL, 0, &(lista_mostrar->fecha_aplicacion), NULL, formato_fecha, sizeof(formato_fecha));
 					SendMessage(GetDlgItem(handler, CC_FechaNacimiento), WM_SETTEXT, sizeof(formato_fecha) / sizeof(formato_fecha), (LPARAM)formato_fecha);
 
-					SendMessage(GetDlgItem(handler, CC_VacunaAAplicarAnterior), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].vacuna) / sizeof(lista_carnet[valor_busqueda].vacuna[0]), (LPARAM)lista_carnet[valor_busqueda].vacuna);
+					SendMessage(GetDlgItem(handler, CC_VacunaAAplicarAnterior), WM_SETTEXT, sizeof(lista_mostrar->vacuna) / sizeof(lista_mostrar->vacuna[0]), (LPARAM)lista_mostrar->vacuna);
 					char aux_dosis[10];
-					_itoa_s(lista_carnet[valor_busqueda].No_dosis, aux_dosis, sizeof(aux_dosis));
+					_itoa_s(lista_mostrar->No_dosis, aux_dosis, sizeof(aux_dosis));
 					SendMessage(GetDlgItem(handler, CC_Dosis), WM_SETTEXT, sizeof(aux_dosis) / sizeof(aux_dosis), (LPARAM)aux_dosis);
 					char aux_f_a[20];
 					char aux_f_a2[20];
-					GetDateFormat(NULL, 0, &(lista_carnet[valor_busqueda].fecha_aplicacion), NULL, aux_f_a, sizeof(aux_f_a));
-					GetDateFormat(NULL, 0, &(lista_carnet[valor_busqueda].prox_dosis), NULL, aux_f_a2, sizeof(aux_f_a2));
+					GetDateFormat(NULL, 0, &(lista_mostrar->fecha_aplicacion), NULL, aux_f_a, sizeof(aux_f_a));
+					GetDateFormat(NULL, 0, &(lista_mostrar->prox_dosis), NULL, aux_f_a2, sizeof(aux_f_a2));
 
 					SendMessage(GetDlgItem(handler, CC_FechaAplicacionAnterior), WM_SETTEXT, sizeof(aux_f_a) / sizeof(aux_f_a[0]), (LPARAM)aux_f_a);
 					SendMessage(GetDlgItem(handler, CC_ProximaDosisAnterior), WM_SETTEXT, sizeof(aux_f_a2) / sizeof(aux_f_a2[0]), (LPARAM)aux_f_a2);
-					SendMessage(GetDlgItem(handler, CC_Lugar), WM_SETTEXT, sizeof(lista_carnet[valor_busqueda].lugar) / sizeof(lista_carnet[valor_busqueda].lugar[0]), (LPARAM)lista_carnet[valor_busqueda].lugar);
-					HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_carnet[valor_busqueda].foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+					SendMessage(GetDlgItem(handler, CC_Lugar), WM_SETTEXT, sizeof(lista_mostrar->lugar) / sizeof(lista_mostrar->lugar[0]), (LPARAM)lista_mostrar->lugar);
+					HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_mostrar->foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
 					SendMessage(GetDlgItem(handler, CC_Foto), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)foto);
 				}
 			}
@@ -2235,9 +2236,9 @@ BOOL CALLBACK Editar_Carnet(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lP
 					if (*ID_bus != NULL || *aux_lugar != NULL || *aux_vacuna != NULL) {
 
 						ID_busqueda = atoi(ID_bus);
-						lista_carnet[ID_busqueda].prox_dosis = ed_prox;
-						strcpy_s(lista_carnet[ID_busqueda].vacuna, aux_vacuna);
-						strcpy_s(lista_carnet[ID_busqueda].lugar, aux_lugar);
+						lista_mostrar[ID_busqueda].prox_dosis = ed_prox;
+						strcpy_s(lista_mostrar[ID_busqueda].vacuna, aux_vacuna);
+						strcpy_s(lista_mostrar[ID_busqueda].lugar, aux_lugar);
 						dato_guardar = guardar_carnet;
 						Guardar_usuarios();
 						MessageBox(handler, "Informacion actualizada", "Aviso", MB_OK | MB_ICONINFORMATION);
@@ -2300,7 +2301,7 @@ BOOL CALLBACK Reportes(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lParam)
 			switch (seleccion_reporte) {
 			case 2:
 				for (int a = 0; a < indice_carnet; a++) {
-					lista_heapquick[a] = lista_carnet[a];
+					lista_heapquick[a] = lista_mostrar[a];
 				}
 				heapsort();
 				//	MessageBox(NULL, "Reporte generado\nse visualiza por carnet", "Aviso", MB_OK);
@@ -2309,7 +2310,7 @@ BOOL CALLBACK Reportes(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lParam)
 
 			case 1:
 				for (int a = 0; a < indice_carnet; a++) {
-					lista_heapquick[a] = lista_carnet[a];
+					lista_heapquick[a] = lista_mostrar[a];
 				}
 				quicksort(0, indice_carnet);
 				//MessageBox(NULL, "Reporte generado\nse visualiza por nombre", "Aviso", MB_OK);
@@ -2483,14 +2484,14 @@ BOOL CALLBACK Buscar(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lParam) {
 			}
 			mostrar = 0;
 			for (int y = 0; y < indice_carnet; y++) {
-				lista_search[y] = lista_carnet[y];
+				lista_search[y] = lista_mostrar[y];
 			}
 			switch (seleccion_busqueda) {
 			case 1: // busqueda por nombre
 				SendMessage(GetDlgItem(handler, BBCC_Dato), WM_GETTEXT, sizeof(aux_nombre) / sizeof(aux_nombre[0]), (LPARAM)aux_nombre);
 				if (regex_match(aux_nombre, letras)) {
 					if (*aux_nombre != NULL) {
-						busqueda_secuencial(aux_nombre);
+						busqueda_secuencial_by_listas(aux_nombre);
 						if (lista_search[0].nombre_persona == NULL) {
 							MessageBox(NULL, "No hay registros", "Aviso", MB_OK | MB_ICONEXCLAMATION);
 						}
@@ -2530,25 +2531,25 @@ BOOL CALLBACK Buscar(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lParam) {
 							/**/
 							valor_busqueda = valor_busqueda - 1;
 							MessageBox(NULL, "Carnet encontrado", "Aviso", MB_OK | MB_ICONEXCLAMATION);
-							GetDateFormat(NULL, 0, &(lista_search[valor_busqueda].fecha_aplicacion), NULL, fecha_1, sizeof(fecha_1));
-							GetDateFormat(NULL, 0, &(lista_search[valor_busqueda].prox_dosis), NULL, fecha_2, sizeof(fecha_2));
-							GetDateFormat(NULL, 0, &(lista_search[valor_busqueda].fecha_nac), NULL, fecha_nac, sizeof(fecha_nac));
+							GetDateFormat(NULL, 0, &(lista_search->fecha_aplicacion), NULL, fecha_1, sizeof(fecha_1));
+							GetDateFormat(NULL, 0, &(lista_search->prox_dosis), NULL, fecha_2, sizeof(fecha_2));
+							GetDateFormat(NULL, 0, &(lista_search->fecha_nac), NULL, fecha_nac, sizeof(fecha_nac));
 
 
-							SendDlgItemMessage(handler, BBCC_Nombre, WM_SETTEXT, sizeof(lista_search[valor_busqueda].nombre_persona) / sizeof(lista_search[valor_busqueda].nombre_persona[0]), (LPARAM)lista_search[valor_busqueda].nombre_persona);
-							SendMessage(GetDlgItem(handler, BBCC_ApellidoP), WM_SETTEXT, sizeof(lista_search[valor_busqueda].npaterno) / sizeof(lista_search[valor_busqueda].npaterno[0]), (LPARAM)lista_search[valor_busqueda].npaterno);
-							SendMessage(GetDlgItem(handler, BBCC_ApellidoM), WM_SETTEXT, sizeof(lista_search[valor_busqueda].nmaterno) / sizeof(lista_search[valor_busqueda].nmaterno[0]), (LPARAM)lista_search[valor_busqueda].nmaterno);
-							_itoa_s(lista_search[valor_busqueda].edad, aux_edad, sizeof(aux_edad));
+							SendDlgItemMessage(handler, BBCC_Nombre, WM_SETTEXT, sizeof(lista_search->nombre_persona) / sizeof(lista_search->nombre_persona[0]), (LPARAM)lista_search->nombre_persona);
+							SendMessage(GetDlgItem(handler, BBCC_ApellidoP), WM_SETTEXT, sizeof(lista_search->npaterno) / sizeof(lista_search->npaterno[0]), (LPARAM)lista_search->npaterno);
+							SendMessage(GetDlgItem(handler, BBCC_ApellidoM), WM_SETTEXT, sizeof(lista_search->nmaterno) / sizeof(lista_search->nmaterno[0]), (LPARAM)lista_search->nmaterno);
+							_itoa_s(lista_search->edad, aux_edad, sizeof(aux_edad));
 							SendMessage(GetDlgItem(handler, BBCC_Edad), WM_SETTEXT, sizeof(aux_edad) / sizeof(aux_edad[0]), (LPARAM)aux_edad);
-							SendMessage(GetDlgItem(handler, BBCC_Sexo), WM_SETTEXT, sizeof(lista_search[valor_busqueda].sexo) / sizeof(lista_search[valor_busqueda].sexo[0]), (LPARAM)lista_search[valor_busqueda].sexo);
+							SendMessage(GetDlgItem(handler, BBCC_Sexo), WM_SETTEXT, sizeof(lista_search->sexo) / sizeof(lista_search->sexo[0]), (LPARAM)lista_search->sexo);
 
-							//SendMessage(GetDlgItem(handler, BBCC_Clave), WM_SETTEXT, sizeof(lista_search[valor_busqueda].lote) / sizeof(lista_search[valor_busqueda].lote[0]), (LPARAM)lista_search[valor_busqueda].lote);
-							_itoa_s(lista_search[valor_busqueda].No_dosis, aux_dosis, sizeof(aux_dosis));
-							SendMessage(GetDlgItem(handler, BBCC_LugarAplicacion), WM_SETTEXT, sizeof(lista_search[valor_busqueda].lugar) / sizeof(lista_search[valor_busqueda].lugar[0]), (LPARAM)lista_search[valor_busqueda].lugar);
+							//SendMessage(GetDlgItem(handler, BBCC_Clave), WM_SETTEXT, sizeof(lista_search->lote) / sizeof(lista_search->lote[0]), (LPARAM)lista_search->lote);
+							_itoa_s(lista_search->No_dosis, aux_dosis, sizeof(aux_dosis));
+							SendMessage(GetDlgItem(handler, BBCC_LugarAplicacion), WM_SETTEXT, sizeof(lista_search->lugar) / sizeof(lista_search->lugar[0]), (LPARAM)lista_search->lugar);
 
 							SendMessage(GetDlgItem(handler, BBCC_DosisAplicar), WM_SETTEXT, sizeof(aux_dosis) / sizeof(aux_dosis[0]), (LPARAM)aux_dosis);
-							SendMessage(GetDlgItem(handler, BBCC_VacunaAplicar), WM_SETTEXT, sizeof(lista_search[valor_busqueda].vacuna) / sizeof(lista_search[valor_busqueda].vacuna[0]), (LPARAM)lista_search[valor_busqueda].vacuna);
-							SendMessage(GetDlgItem(handler, BBCC_TipoVacuna), WM_SETTEXT, sizeof(lista_search[valor_busqueda].z_vac) / sizeof(lista_search[valor_busqueda].z_vac[0]), (LPARAM)lista_search[valor_busqueda].z_vac);
+							SendMessage(GetDlgItem(handler, BBCC_VacunaAplicar), WM_SETTEXT, sizeof(lista_search->vacuna) / sizeof(lista_search->vacuna[0]), (LPARAM)lista_search->vacuna);
+							SendMessage(GetDlgItem(handler, BBCC_TipoVacuna), WM_SETTEXT, sizeof(lista_search->z_vac) / sizeof(lista_search->z_vac[0]), (LPARAM)lista_search->z_vac);
 
 							SendMessage(GetDlgItem(handler, BBCC_FechaAplicacion), WM_SETTEXT, sizeof(fecha_1) / sizeof(fecha_1[0]), (LPARAM)fecha_1);
 
@@ -2557,7 +2558,7 @@ BOOL CALLBACK Buscar(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lParam) {
 							SendMessage(GetDlgItem(handler, BBCC_FechaNacimiento), WM_SETTEXT, sizeof(fecha_nac) / sizeof(fecha_nac[0]), (LPARAM)fecha_nac);
 
 
-							HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_search[valor_busqueda].foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+							HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_search->foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
 
 							SendMessage(GetDlgItem(handler, BBCC_Foto), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)foto);
 						}
@@ -2611,7 +2612,7 @@ BOOL CALLBACK Buscar(HWND handler, UINT mensaje, WPARAM wParam, LPARAM lParam) {
 
 				SendMessage(GetDlgItem(handler, BBCC_FechaNacimiento), WM_SETTEXT, sizeof(fecha_nac) / sizeof(fecha_nac[0]), (LPARAM)fecha_nac);
 
-				HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_search[valor_busqueda].foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
+				HBITMAP foto = (HBITMAP)LoadImage(NULL, lista_search->foto, IMAGE_BITMAP, 256, 256, LR_LOADFROMFILE);
 				SendMessage(GetDlgItem(handler, BBCC_Foto), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)foto);
 			}
 			break;
